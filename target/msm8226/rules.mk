@@ -1,9 +1,20 @@
 LOCAL_DIR := $(GET_LOCAL_DIR)
 
-INCLUDES += -I$(LOCAL_DIR)/include -I$(LK_TOP_DIR)/platform/msm_shared
+INCLUDES += -I$(LOCAL_DIR)/include -I$(LOCAL_DIR)/panels -I$(LK_TOP_DIR)/platform/msm_shared
 INCLUDES += -I$(LK_TOP_DIR)/dev/gcdb/display -I$(LK_TOP_DIR)/dev/gcdb/display/include
 
 PLATFORM := msm8226
+
+# Modular device display settings
+ifeq ($(DEVICE),lumia630)
+UEFI_FB_HORZ := 480
+UEFI_FB_VERT := 854
+else
+UEFI_FB_HORZ ?= 720
+UEFI_FB_VERT ?= 1280
+endif
+
+UEFI_FB_BASE ?= 0x03200000
 
 MEMBASE := 0x07F00000 # SDRAM
 MEMSIZE := 0x00100000 # 1MB
@@ -36,7 +47,10 @@ DEFINES += \
 	KERNEL_ADDR=$(KERNEL_ADDR) \
 	RAMDISK_ADDR=$(RAMDISK_ADDR) \
 	SCRATCH_ADDR=$(SCRATCH_ADDR) \
-	SCRATCH_SIZE=$(SCRATCH_SIZE)
+	SCRATCH_SIZE=$(SCRATCH_SIZE) \
+	UEFI_FB_BASE=$(UEFI_FB_BASE) \
+	UEFI_FB_VERT=$(UEFI_FB_VERT) \
+	UEFI_FB_HORZ=$(UEFI_FB_HORZ)
 
 
 OBJS += \
